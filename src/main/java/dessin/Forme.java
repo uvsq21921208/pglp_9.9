@@ -10,4 +10,10 @@ public abstract class Forme{
 	
 
 	public abstract void move(int x, int y);
+
+	public String getNom() {
+		// TODO Auto-generated method stub
+		return this.name;
+	}
+
 }

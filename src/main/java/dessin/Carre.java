@@ -23,4 +23,13 @@ public class Carre extends Forme {
 
 	}
 
+	public int getCote() {
+		// TODO Auto-generated method stub
+		return this.cote;
+	}
+
+	public Point getPoint() {
+		return this.point;
+	}
+
 }
