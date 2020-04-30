@@ -1,0 +1,6 @@
+.settings
+.vscode
+.classpath
+.project
+data
+derby.log
