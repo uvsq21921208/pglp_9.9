@@ -10,9 +10,11 @@ public class Cercle extends Forme {
 	}
 
 	@Override
-	public String show() {
-		return this.name + " : Cercle ((Rayon:" + rayon +") "
+	public void show() {
+		String message =  this.name + " : Cercle ((Rayon:" + rayon +") "
 				 + ("(x:"+point.getX() + "," + "y:"+point.getY());
+		Display display = new ConsoleDisplay();
+		display.display(message);
 	}
 
 	@Override

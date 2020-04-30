@@ -12,10 +12,11 @@ public class Rectangle extends Forme {
 	}
 
 	@Override
-	public String show() {
-		return this.name + " : Rectangle ((h:" + height +",w:"+ width + "))"
+	public void show() {
+		String message = this.name + " : Rectangle ((h:" + height +",w:"+ width + "))"
 						 + ("(x:"+point.getX() + "," + "y:"+point.getY());
-						
+		Display display = new ConsoleDisplay();
+		display.display(message);		
 	}
 
 	@Override

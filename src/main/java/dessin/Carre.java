@@ -10,9 +10,11 @@ public class Carre extends Forme {
 	}
 
 	@Override
-	public String show() {
-		return this.name + " : Carre ((cote:" + cote +") "
+	public void show() {
+		String message = this.name + " : Carre ((cote:" + cote +") "
 				 + ("(x:"+point.getX() + "," + "y:"+point.getY());
+		Display display = new ConsoleDisplay();
+		display.display(message);
 	}
 
 	@Override

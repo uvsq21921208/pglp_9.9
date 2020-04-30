@@ -15,11 +15,12 @@ public class Triangle extends Forme {
 	}
 
 	@Override
-	public String show() {
-		return this.name + " : Triangle (a:(" + a.getX()+ ","+a.getY()+")"
+	public void show() {
+		String message = this.name + " : Triangle (a:(" + a.getX()+ ","+a.getY()+")"
 										+ "(b:(" + b.getX() +","+b.getY()+")"
 										+ "(c:(" + c.getX() +","+c.getY()+")";
-				
+		Display display = new ConsoleDisplay();
+		display.display(message);
 	}
 	@Override
 	public void move(int x, int y) {

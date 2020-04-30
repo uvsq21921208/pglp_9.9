@@ -6,7 +6,7 @@ public abstract class Forme{
 	public Forme(String name) {
 		this.name = name;
 	}
-	public abstract String show();
+	public abstract void show();
 	
 
 	public abstract void move(int x, int y);
