@@ -14,15 +14,15 @@ public class Carre extends Forme {
 
 	@Override
 	public void show() {
-		String message = this.name + " : Carre ((cote:" + cote +") "
-				 + ("(x:"+point.getX() + "," + "y:"+point.getY());
+		String message = this.name + " : Carre (cote:" + cote +", "
+				 + ("(x:"+point.getX() + "," + "y:"+point.getY())+"))";
 		Display display = new ConsoleDisplay();
 		display.display(message);
 	}
 
 	@Override
 	public void move(int x, int y) {
-		// TODO Auto-generated method stub
+		this.point.move(x, y);
 
 	}
 

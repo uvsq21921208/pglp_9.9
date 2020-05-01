@@ -24,9 +24,9 @@ public class Triangle extends Forme {
 	}
 	@Override
 	public void move(int x, int y) {
-		this.a.move(x, y);
-		this.b.move(x, y);
-		this.c.move(x, y);
+		this.a.move(x + a.getX(), y + a.getY());
+		this.b.move(x + b.getX(), y + b.getY());
+		this.c.move(x + c.getX(), y + c.getY());
 		
 
 	}
