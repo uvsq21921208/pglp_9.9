@@ -1,4 +1,4 @@
-package dao
+package dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,12 +17,13 @@ public class CarreDao extends Dao<Carre> {
     int i = -1;
     try {
       insert = this.connect.prepareStatement("Insert into Carre"
-          + "(nom, cote, x,y)"
-          + " values (?,?,?,?)");
+          + "(nom, cote, x, y, groupeid)"
+          + " values (?,?,?,?,?)");
       insert.setString(1, obj.getNom());
       insert.setInt(2, obj.getCote());
       insert.setInt(3, obj.getPoint().getX());
       insert.setInt(4, obj.getPoint().getY());
+      insert.setString(5, obj.getGroupeid());
       i = insert.executeUpdate();
      
 
@@ -60,8 +61,8 @@ public class CarreDao extends Dao<Carre> {
         int cote = result.getInt("cote");
         int x = result.getInt("x");
         int y = result.getInt("y");
-        c = new Carre(nom, cote, new Point(x,y));
-        
+        String groupeid = result.getString("groupeid");
+        c = new Carre(nom, cote, new Point(x,y), groupeid);
         select.close();
       }
     } catch (SQLException e) {
@@ -84,14 +85,13 @@ public class CarreDao extends Dao<Carre> {
     this.connect();
     PreparedStatement update = null;
     try {
-      update = this.connect.prepareStatement("update Personnels"
-          + " set nom = (?), prenom = (?), fonction = (?), groupeid = (?)" 
+      update = this.connect.prepareStatement("update Cercle"
+          + " set cote = (?), x = (?), y = (?)" 
           + " where nom = (?) ");
-      update.setString(1, obj.getNom());
-      update.setString(2, obj.getPrenom());
-      update.setString(3, obj.getFonction());
-      update.setInt(4, obj.getGroupeId());
-      update.setString(5, obj.getNom());
+      update.setInt(1, obj.getCote());
+      update.setInt(3, obj.getPoint().getX());
+      update.setInt(3, obj.getPoint().getY());
+      update.setString(4, obj.getNom());
       update.executeUpdate();
       update.close();
     } catch (SQLException e) {
@@ -112,7 +112,7 @@ public class CarreDao extends Dao<Carre> {
     this.connect();
     PreparedStatement delete = null;
     try {
-      delete = this.connect.prepareStatement("delete from Personnels " 
+      delete = this.connect.prepareStatement("delete from Carre " 
           + "where nom = (?)");
       delete.setString(1, obj.getNom());
       delete.execute();
@@ -129,44 +129,5 @@ public class CarreDao extends Dao<Carre> {
     }
 
   }
-  /**
-   * get all personnels.
-   * @return Array list that contains all personnels.
-   */
-
-  public ArrayList<Carre> getPersonnels(int groupeId) {
-
-    ArrayList<Carre> personnels = new ArrayList<Carre>();
-    this.connect();
-    PreparedStatement select = null;
-    try {
-      select = this.connect.prepareStatement("Select * from Personnels "
-          + "where groupeid = (?)");
-      select.setInt(1, groupeId);
-      select.execute();
-      ResultSet result = select.getResultSet();
-
-      while (result.next()) {
-        String nom = result.getString("nom");
-        String prenom = result.getString("prenom");
-        String fonction = result.getString("fonction");
-        Carre p = new Carre.PersonelBuilder(nom, prenom, fonction).build();
-        personnels.add(p);
-      }
-    } catch (SQLException e) {
-
-      e.printStackTrace();
-    }
-    try {
-      if (select != null) {
-        select.close();
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    
-
-    //this.disconnect();
-    return personnels;
-  }
+  
 }

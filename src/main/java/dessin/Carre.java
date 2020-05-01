@@ -3,10 +3,13 @@ package dessin;
 public class Carre extends Forme {
 	private Point point;
 	int cote;
-	public Carre(String name, int cote, Point point) {
-		super(name);
+	
+	public Carre(String name, int cote, Point point, String groupeid) {
+		super(name, groupeid);
 		this.cote = cote;
 		this.point = new Point(point.getX(), point.getY());
+		
+		
 	}
 
 	@Override

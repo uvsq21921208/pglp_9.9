@@ -6,8 +6,8 @@ public class Triangle extends Forme {
 	private Point b;
 	private Point c;
 	
-	public Triangle(String name) {
-		super(name);
+	public Triangle(String name, String groupeid, Point a, Point b, Point c) {
+		super(name, groupeid);
 		this.a = new Point(a.getX(), a.getY());
 		this.b = new Point(b.getX(), b.getY());
 		this.c = new Point(c.getX(), c.getY());
@@ -29,6 +29,16 @@ public class Triangle extends Forme {
 		this.c.move(x, y);
 		
 
+	}
+	
+	public Point getA() {
+		return this.a;
+	}
+	public Point getB() {
+		return this.b;
+	}
+	public Point getC() {
+		return this.c;
 	}
 
 }

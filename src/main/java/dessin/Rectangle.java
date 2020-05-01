@@ -4,8 +4,8 @@ public class Rectangle extends Forme {
 	private Point point;
 	private int height;
 	private int width;
-	public Rectangle(String name, Point point, int h, int w) {
-		super(name);
+	public Rectangle(String name, Point point, int h, int w, String groupeid) {
+		super(name, groupeid);
 		this.point = new Point(point.getX(), point.getY());
 		height = h;
 		width = w;
@@ -24,6 +24,15 @@ public class Rectangle extends Forme {
 		
 		this.point.move(x, y);
 		
+	}
+	public int getHeight() {
+		return this.height;
+	}
+	public int getWidth() {
+		return this.width;
+	}
+	public Point getPoint() {
+		return this.point;
 	}
 
 }

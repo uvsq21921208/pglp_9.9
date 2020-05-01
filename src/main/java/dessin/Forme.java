@@ -2,9 +2,12 @@ package dessin;
 
 public abstract class Forme{
 	
-	String name;
-	public Forme(String name) {
+	protected String name;
+	protected String groupeid;
+	public Forme(String name, String groupeid) {
 		this.name = name;
+		this.groupeid = groupeid;
+ 
 	}
 	public abstract void show();
 	
@@ -14,6 +17,9 @@ public abstract class Forme{
 	public String getNom() {
 		// TODO Auto-generated method stub
 		return this.name;
+	}
+	public String getGroupeid() {
+		return this.groupeid;
 	}
 
 }
