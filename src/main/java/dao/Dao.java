@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public abstract class Dao<T> {
   public Connection connect = null;
@@ -15,6 +16,7 @@ public abstract class Dao<T> {
   public abstract T update(T obj);
 
   public abstract void delete(T obj);
+  public abstract ArrayList<T> getAllGroupeObject(String id);
 
   /**
   * Connect to database.
@@ -24,7 +26,7 @@ public abstract class Dao<T> {
 
     try {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-      connect = DriverManager.getConnection("jdbc:derby:mydb;create=true");
+      connect = DriverManager.getConnection("jdbc:derby:6;create=true");
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
       try {

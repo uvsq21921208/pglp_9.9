@@ -3,9 +3,11 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dessin.Triangle;
 import dessin.Point;
+
 
 public class TriangleDao extends Dao<Triangle> {
 
@@ -16,8 +18,8 @@ public class TriangleDao extends Dao<Triangle> {
     int i = -1;
     try {
       insert = this.connect.prepareStatement("Insert into Triangle"
-          + "(nom, ax, ay, bx, by, cx, cy, groupeid)"
-          + " values (?,?,?,?,?)");
+          + "(nom, ax, ay, bx, \"by\", cx, cy, groupeid)"
+          + " values (?,?,?,?,?,?,?,?)");
       insert.setString(1, obj.getNom());
       insert.setInt(2, obj.getA().getX());
       insert.setInt(3, obj.getA().getY());
@@ -60,9 +62,9 @@ public class TriangleDao extends Dao<Triangle> {
       ResultSet result = select.getResultSet();
       if (result.next()) {
     	String nom = result.getString("nom");
-        Point a = new Point(result.getInt("ax"), result.getInt("bx"));
-        Point b = new Point(result.getInt("ax"), result.getInt("bx"));
-        Point c = new Point(result.getInt("ax"), result.getInt("bx"));
+        Point a = new Point(result.getInt("ax"), result.getInt("ay"));
+        Point b = new Point(result.getInt("bx"), result.getInt("by"));
+        Point c = new Point(result.getInt("cx"), result.getInt("cy"));
         
         String groupeid = result.getString("groupeid");
         t = new Triangle(nom, groupeid, a, b, c);
@@ -89,7 +91,7 @@ public class TriangleDao extends Dao<Triangle> {
     PreparedStatement update = null;
     try {
       update = this.connect.prepareStatement("update Triangle"
-          + " set ax = (?), ay = (?), bx = (?), by = (?), cx = (?), cy = (?)" 
+          + " set ax = (?), ay = (?), bx = (?), \"by\" = (?), cx = (?), cy = (?)" 
           + " where nom = (?) ");
       
       update.setInt(1, obj.getA().getX());
@@ -136,5 +138,44 @@ public class TriangleDao extends Dao<Triangle> {
     }
 
   }
+
+@Override
+public ArrayList<Triangle> getAllGroupeObject(String id) {
+	ArrayList<Triangle> triangles = new ArrayList<Triangle>();
+    this.connect();
+    PreparedStatement select = null;
+    try {
+      select = this.connect.prepareStatement("Select * from triangle "
+          + "where groupeid = (?)");
+      select.setString(1, id);
+      select.execute();
+      ResultSet result = select.getResultSet();
+
+      while (result.next()) {
+    	  String nom = result.getString("nom");
+          Point a = new Point(result.getInt("ax"), result.getInt("ay"));
+          Point b = new Point(result.getInt("bx"), result.getInt("by"));
+          Point c = new Point(result.getInt("cx"), result.getInt("cy"));
+          
+          
+          Triangle t = new Triangle(nom, id, a, b, c);
+        triangles.add(t);
+      }
+    } catch (SQLException e) {
+
+      e.printStackTrace();
+    }
+    try {
+      if (select != null) {
+        select.close();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    
+
+    //this.disconnect();
+    return triangles;
+}
   
 }

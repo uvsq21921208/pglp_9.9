@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dessin.Carre;
+import dessin.Cercle;
 import dessin.Point;
 
 public class CarreDao extends Dao<Carre> {
@@ -85,11 +86,11 @@ public class CarreDao extends Dao<Carre> {
     this.connect();
     PreparedStatement update = null;
     try {
-      update = this.connect.prepareStatement("update Cercle"
+      update = this.connect.prepareStatement("update Carre"
           + " set cote = (?), x = (?), y = (?)" 
           + " where nom = (?) ");
       update.setInt(1, obj.getCote());
-      update.setInt(3, obj.getPoint().getX());
+      update.setInt(2, obj.getPoint().getX());
       update.setInt(3, obj.getPoint().getY());
       update.setString(4, obj.getNom());
       update.executeUpdate();
@@ -129,5 +130,42 @@ public class CarreDao extends Dao<Carre> {
     }
 
   }
+
+@Override
+public ArrayList<Carre> getAllGroupeObject(String id) {
+	ArrayList<Carre> carres = new ArrayList<Carre>();
+    this.connect();
+    PreparedStatement select = null;
+    try {
+      select = this.connect.prepareStatement("Select * from carre "
+          + "where groupeid = (?)");
+      select.setString(1, id);
+      select.execute();
+      ResultSet result = select.getResultSet();
+
+      while (result.next()) {
+        String nom = result.getString("nom");
+        int cote = result.getInt("cote");
+        int x = result.getInt("x");
+        int y = result.getInt("y");
+        Carre c = new Carre(nom, cote, new Point(x, y), id);
+        carres.add(c);
+      }
+    } catch (SQLException e) {
+
+      e.printStackTrace();
+    }
+    try {
+      if (select != null) {
+        select.close();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    
+
+    //this.disconnect();
+    return carres;
+}
   
 }

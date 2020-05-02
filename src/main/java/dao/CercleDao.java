@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import dessin.Cercle;
 import dessin.Point;
 
+
 public class CercleDao extends Dao<Cercle> {
 
   @Override
@@ -86,10 +87,10 @@ public class CercleDao extends Dao<Cercle> {
     PreparedStatement update = null;
     try {
       update = this.connect.prepareStatement("update Cercle"
-          + " set cote = (?), x = (?), y = (?)" 
+          + " set rayon = (?), x = (?), y = (?)" 
           + " where nom = (?) ");
       update.setInt(1, obj.getRayon());
-      update.setInt(3, obj.getCentre().getX());
+      update.setInt(2, obj.getCentre().getX());
       update.setInt(3, obj.getCentre().getY());
       update.setString(4, obj.getNom());
       update.executeUpdate();
@@ -130,4 +131,45 @@ public class CercleDao extends Dao<Cercle> {
 
   }
   
+  
+  /**
+   * get all Cercles.
+   * @return Array list that contains all Cercles.
+   */
+@Override
+public ArrayList<Cercle> getAllGroupeObject(String id) {
+	  ArrayList<Cercle> cercles = new ArrayList<Cercle>();
+	    this.connect();
+	    PreparedStatement select = null;
+	    try {
+	      select = this.connect.prepareStatement("Select * from Cercle "
+	          + "where groupeid = (?)");
+	      select.setString(1, id);
+	      select.execute();
+	      ResultSet result = select.getResultSet();
+
+	      while (result.next()) {
+	        String nom = result.getString("nom");
+	        int rayon = result.getInt("rayon");
+	        int x = result.getInt("x");
+	        int y = result.getInt("y");
+	        Cercle c = new Cercle(nom, rayon, new Point(x, y), id);
+	        cercles.add(c);
+	      }
+	    } catch (SQLException e) {
+
+	      e.printStackTrace();
+	    }
+	    try {
+	      if (select != null) {
+	        select.close();
+	      }
+	    } catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+	    
+
+	    //this.disconnect();
+	    return cercles;
+}
 }

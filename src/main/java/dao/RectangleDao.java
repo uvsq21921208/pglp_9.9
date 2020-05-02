@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dessin.Rectangle;
+import dessin.Rectangle;
 import dessin.Point;
 
 public class RectangleDao extends Dao<Rectangle> {
@@ -18,7 +19,7 @@ public class RectangleDao extends Dao<Rectangle> {
     try {
       insert = this.connect.prepareStatement("Insert into Rectangle"
           + "(nom, h, w, x, y, groupeid)"
-          + " values (?,?,?,?,?)");
+          + " values (?,?,?,?,?,?)");
       insert.setString(1, obj.getNom());
       insert.setInt(2, obj.getHeight());
       insert.setInt(3, obj.getWidth());
@@ -132,5 +133,44 @@ public class RectangleDao extends Dao<Rectangle> {
     }
 
   }
+
+@Override
+public ArrayList<Rectangle> getAllGroupeObject(String id) {
+	ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
+    this.connect();
+    PreparedStatement select = null;
+    try {
+      select = this.connect.prepareStatement("Select * from Rectangle "
+          + "where groupeid = (?)");
+      select.setString(1, id);
+      select.execute();
+      ResultSet result = select.getResultSet();
+
+      while (result.next()) {
+    	String nom = result.getString("nom");
+        int h = result.getInt("h");
+        int w = result.getInt("w");
+        int x = result.getInt("x");
+        int y = result.getInt("y");
+        
+        Rectangle r = new Rectangle(nom, new Point(x,y), h, w, id);
+        rectangles.add(r);
+      }
+    } catch (SQLException e) {
+
+      e.printStackTrace();
+    }
+    try {
+      if (select != null) {
+        select.close();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    
+
+    //this.disconnect();
+    return rectangles;
+}
   
 }

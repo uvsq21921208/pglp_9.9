@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FormeGroupe implements Iterable<Forme>{
-	private List<Forme> formes; 
-	public FormeGroupe(String name) {
+public class FormeGroupe implements Iterable<Forme> {
+	private List<Forme> formes;
+	private String nom;
+	public FormeGroupe(String nom) {
 		
 		formes = new ArrayList<Forme>();
+		this.nom = nom;
 	}
 
 	public Iterator<Forme> iterator() {
@@ -33,5 +35,10 @@ public class FormeGroupe implements Iterable<Forme>{
 	public void addForme(Forme f) {
 		this.formes.add(f);
 	}
+	
+	public String getNom() {
+		return this.nom;
+	}
+	
 	
 }
