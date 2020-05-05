@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FormeGroupe implements Iterable<Forme> {
+public class FormeGroupe extends GenericForm implements Iterable<Forme> {
 	private List<Forme> formes;
 	private String nom;
 	public FormeGroupe(String nom) {

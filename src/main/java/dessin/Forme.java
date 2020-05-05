@@ -1,8 +1,8 @@
 package dessin;
 
-public abstract class Forme{
+public abstract class Forme extends GenericForm{
 	
-	protected String name;
+
 	protected String groupeid;
 	public Forme(String name, String groupeid) {
 		this.name = name;
