@@ -10,7 +10,7 @@ import dessin.Carre;
 import dessin.Cercle;
 import dessin.Forme;
 import dessin.FormeGroupe;
-
+import dessin.Point;
 import dessin.Rectangle;
 import dessin.Triangle;
 
@@ -34,27 +34,58 @@ public class DrawingTUI {
 	
 	public Command nextCommand(String userText) {
 		String[] result = userText.split("\\s+");
-		
+		CreationCommand command = null;
+		Forme f = null;
 		if (!(result[0].toLowerCase().equals("move"))) {
 			switch(result[1].toLowerCase()) {
 			case "cercle":
+			int x = Integer.parseInt(result[2]);
+			int y = Integer.parseInt(result[3]);
+			String name = result[0];
+			String groupeid = "g1";
+			int rayon = Integer.parseInt(result[4]);
 			
-				Command command =  (Command) commands.get("cercle");
-				
+			f = new Cercle(name, rayon, new Point(x, y), groupeid);
+			command = (CercleCreation) commands.get("cercle");
 				
 				break;
 			case "triangle":
+				groupeid = "g1";
+				command =  (TriangleCreation) commands.get("triangle");
+				name = result[0];
+				Point A = new Point(Integer.parseInt(result[2]), Integer.parseInt(result[3]));
+				Point B = new Point(Integer.parseInt(result[4]), Integer.parseInt(result[5]));
+				Point C = new Point(Integer.parseInt(result[6]), Integer.parseInt(result[7]));
+				f = new Triangle(name, groupeid, A, B, C);
 				break;
 			case "carre":
+				x = Integer.parseInt(result[2]);
+				y = Integer.parseInt(result[3]);
+				name = result[0];
+				groupeid = "g1";
+				int cote = Integer.parseInt(result[4]);
+				
+				f = new Carre(name, cote, new Point(x, y), groupeid);
+				command = (CarreCreation) commands.get("carre");
+					
+				
 				break;
 			case "rectangle":
+				name = result[0];
+				x = Integer.parseInt(result[2]);
+				y = Integer.parseInt(result[3]);
+				int h = Integer.parseInt(result[4]);
+				int w = Integer.parseInt(result[5]);
+				groupeid = "g1";
+				f = new Rectangle(name, new Point(x, y), h, w, groupeid);
+				command = (RectangleCreation) commands.get("rectangle");
 				break;
 				
 			}
 			
 		}
-		
-		return null;
+		command.setParamaters(f);
+		return command;
 	}
 	
 	public void showDessin() {
@@ -104,7 +135,7 @@ public class DrawingTUI {
 		
 	}
 	
-	private class FormeDeplacement extends MovementCommand {
+	private class FormeDeplacement extends MovementCommand implements Command{
 		private int x;
 		private int y;
 		private Forme f;
