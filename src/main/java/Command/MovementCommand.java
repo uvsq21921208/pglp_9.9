@@ -3,9 +3,12 @@ package Command;
 import dessin.GenericForm;
 
 public abstract class MovementCommand implements Command{
-	private GenericForm form;
+	protected GenericForm f;
+	protected int x;
+	protected int y;
 	public void setParameters(int x, int y) {
-		
+		this.x = x;
+		this.y = y;
 	}
 	@Override
 	public void execute() {
@@ -14,7 +17,7 @@ public abstract class MovementCommand implements Command{
 	}
 	
 	public void setForm(GenericForm f) {
-		this.form = f;
+		this.f = f;
 	}
 
 }

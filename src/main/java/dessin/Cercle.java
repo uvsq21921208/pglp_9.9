@@ -4,7 +4,7 @@ public class Cercle extends Forme {
 	private int rayon;
 	private Point centre;
 	public Cercle(String name, int rayon, Point point, String groupeid) {
-		super(name, groupeid);
+		super(name, groupeid, "Cercle");
 		this.rayon = rayon; 
 		this.centre = new Point(point.getX(), point.getY());
 	
@@ -20,7 +20,7 @@ public class Cercle extends Forme {
 
 	@Override
 	public void move(int x, int y) {
-		// TODO Auto-generated method stub
+		this.centre.move(x, y);
 
 	}
 

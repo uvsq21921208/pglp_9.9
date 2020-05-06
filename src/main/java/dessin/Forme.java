@@ -4,7 +4,9 @@ public abstract class Forme extends GenericForm{
 	
 
 	protected String groupeid;
-	public Forme(String name, String groupeid) {
+	protected String type;
+	public Forme(String name, String groupeid, String type) {
+		this.type = type;
 		this.name = name;
 		this.groupeid = groupeid;
  
@@ -20,6 +22,9 @@ public abstract class Forme extends GenericForm{
 	}
 	public String getGroupeid() {
 		return this.groupeid;
+	}
+	public String getType() {
+		return this.type;
 	}
 
 }

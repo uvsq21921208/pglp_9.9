@@ -5,7 +5,7 @@ public class Carre extends Forme {
 	int cote;
 	
 	public Carre(String name, int cote, Point point, String groupeid) {
-		super(name, groupeid);
+		super(name, groupeid, "Carre");
 		this.cote = cote;
 		this.point = new Point(point.getX(), point.getY());
 		

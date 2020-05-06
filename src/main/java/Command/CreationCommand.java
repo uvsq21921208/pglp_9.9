@@ -1,17 +1,18 @@
 package Command;
 
 
-import dessin.GenericForm;
+import dessin.Forme;
+
 
 public class CreationCommand implements Command {
-	private GenericForm form;
+	protected Forme f;
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
 		
 	}
-	public void setParamaters(GenericForm f){
-		this.form = f;
+	public void setForm(Forme f){
+		this.f = f;
 	}
 
 }
