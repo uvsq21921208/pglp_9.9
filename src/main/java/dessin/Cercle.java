@@ -13,7 +13,7 @@ public class Cercle extends Forme {
 	@Override
 	public void show() {
 		String message =  this.name + " : Cercle ((Rayon:" + rayon +") "
-				 + ("(x:"+centre.getX() + "," + "y:"+centre.getY());
+				 + ("(x:"+centre.getX() + "," + "y:"+centre.getY())+"))";
 		Display display = new ConsoleDisplay();
 		display.display(message);
 	}

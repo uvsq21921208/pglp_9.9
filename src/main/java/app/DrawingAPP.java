@@ -43,14 +43,24 @@ public void run(final String[] args) {
 			
 			count += 1;
 			} else {
-				message = drawing.getFormes().get(0).getType()+" "+drawing.getFormes().get(0).getNom()
-						+  " has been moved.";
-				display.showMessage(message);
-				drawing.getFormes().get(0).show();
-				
-				for (Forme f : drawing.getFormes()) {
-					f.show();
+				drawing.deleteFormesMoved();
+				if (drawing.getMovedFormes().size() > 1) {
+					message = "These formes has been moved : ";
+					for (Forme f : drawing.getMovedFormes()) {
+						message += f.getNom() + " ";
+					}
+					display.showMessage(message);
+					
+					message = "New coordinates : ";
+					display.showMessage(message);
+					for (Forme f : drawing.getMovedFormes()) {
+						f.show();
+					}
+					
+				}else {
+					
 				}
+				
 			}
 		} else {
 			message = "Please enter a valid command";

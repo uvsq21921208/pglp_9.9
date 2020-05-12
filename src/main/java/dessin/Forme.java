@@ -26,5 +26,9 @@ public abstract class Forme extends GenericForm{
 	public String getType() {
 		return this.type;
 	}
+	public void setGroupeid(String string) {
+		this.groupeid = string;
+		
+	}
 
 }

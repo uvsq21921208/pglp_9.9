@@ -2,6 +2,7 @@ package Command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,20 +17,26 @@ import dessin.Rectangle;
 import dessin.Triangle;
 
 public class DrawingTUI {
-	
+	private static int groupeNumber = 0;
 	private List<Forme> formes;
 	private List<FormeGroupe> groupes;
 	private Map<String, Command> commands;
+	private List<Forme> movedFormes;
 	public DrawingTUI() {
 		commands = new HashMap<String, Command>();
 		formes = new ArrayList<Forme>();
+		movedFormes = new ArrayList<Forme>();
 		groupes = new ArrayList<FormeGroupe>();
 		commands.put("carre", new CarreCreation());
 		commands.put("cercle", new CercleCreation());
 		commands.put("triangle", new TriangleCreation());
 		commands.put("rectangle", new RectangleCreation());
         commands.put("move", new FormeDeplacement());
-        commands.put("moveGroupe", new FormeGroupeDeplacement());
+        commands.put("moveall", new FormeGroupeDeplacement());
+        commands.put("showall", new ShowAllCommand());
+        commands.put("deleteall", new FormeDeleteionAll());
+        commands.put("show", new ShowCommand());
+        commands.put("delete", new FormeDeletion());
 		
 	}
 	
@@ -43,7 +50,7 @@ public class DrawingTUI {
 		int x = Integer.parseInt(result[2]);
 		int y = Integer.parseInt(result[3]);
 		String name = result[0];
-		String groupeid = "g1";
+		String groupeid = "null";
 		int rayon = Integer.parseInt(result[4]);
 		
 		f = new Cercle(name, rayon, new Point(x, y), groupeid);
@@ -52,7 +59,7 @@ public class DrawingTUI {
 			
 			break;
 		case "triangle":
-			groupeid = "g1";
+			groupeid = "null";
 			command =  (TriangleCreation) commands.get("triangle");
 			name = result[0];
 			Point A = new Point(Integer.parseInt(result[2]), Integer.parseInt(result[3]));
@@ -65,7 +72,7 @@ public class DrawingTUI {
 			x = Integer.parseInt(result[2]);
 			y = Integer.parseInt(result[3]);
 			name = result[0];
-			groupeid = "g1";
+			groupeid = "null";
 			int cote = Integer.parseInt(result[4]);
 			
 			f = new Carre(name, cote, new Point(x, y), groupeid);
@@ -79,7 +86,7 @@ public class DrawingTUI {
 			y = Integer.parseInt(result[3]);
 			int h = Integer.parseInt(result[4]);
 			int w = Integer.parseInt(result[5]);
-			groupeid = "g1";
+			groupeid = "null";
 			f = new Rectangle(name, new Point(x, y), h, w, groupeid);
 			command = (RectangleCreation) commands.get("rectangle");
 			
@@ -93,20 +100,65 @@ public class DrawingTUI {
 		return command;
 	}
 	
-	public FormeDeplacement getMovementCmd(String[] result) {
+	private FormeDeplacement getMovementCmd(String[] result) {
 		
 		GenericForm f = getFormeByName(this.formes, result[1]);
 		FormeDeplacement command = (FormeDeplacement) this.commands.get("move");
 		command.setForm(f);
+		movedFormes.add((Forme)f);
 		int x = Integer.parseInt(result[2]);
 		int y = Integer.parseInt(result[3]);
-		System.out.println(x);
-		System.out.println(y);
 		command.setParameters(x, y);
 		return command;
 	}
+	
+	private FormeGroupeDeplacement getGroupeMovementCmd(String[] result) {
+		FormeGroupe groupeForme = new FormeGroupe("gr"+groupeNumber);
+		FormeGroupeDeplacement command = (FormeGroupeDeplacement) this.commands.get("moveall");
+		int i = 1;
+		while (i != result.length - 2) {
+			Forme forme = getFormeByName(this.formes, result[i]);
+			movedFormes.add(forme);
+			forme.setGroupeid("gr"+groupeNumber);
+			groupeForme.addForme(forme);
+			i += 1;
+		}
+		int x = Integer.parseInt(result[i]);
+		int y = Integer.parseInt(result[i+1]);
+		command.setParameters(x, y);
+		command.setForm(groupeForme);
+		
+		groupeNumber += 1;
+		
+		
+		return command;
+		
+	}
+	public void deleteFormesMoved() {
+		this.movedFormes.clear();
+	}
 	private Forme getFormeByName(final List<Forme> list, final String name){
 	    return list.stream().filter(o -> o.getNom().equals(name)).findFirst().get();
+	}
+	
+	private ShowCommand getShowCommand(String[] result) {
+		FormeGroupe g = new FormeGroupe("null");
+		for(int i = 1; i < result.length; ++i) {
+			g.addForme(getFormeByName(this.formes, result[i]));
+		}
+		ShowCommand command = (ShowCommand) this.commands.get("show");
+		command.setForme(g);
+		return command;
+	}
+	private FormeDeletion getDeleteCommand(String[] result) {
+		FormeDeletion command = (FormeDeletion) this.commands.get("delete");
+
+		FormeGroupe g = new FormeGroupe("null");
+		for(String s : result) {
+			g.addForme(getFormeByName(this.formes, s));
+		}
+		command.setForme(this.formes);
+		return command;
 	}
 	public Command nextCommand(String userText) {
 		userText = userText.replaceAll("[=)(,]", " ");
@@ -117,10 +169,26 @@ public class DrawingTUI {
 		switch(result[0].toLowerCase()) {
 		case "move":
 			command = getMovementCmd(result);
-			System.out.println("move");
+	
 			break;
-		case "merge":
-			System.out.println("merge");
+		case "moveall":
+			command = getGroupeMovementCmd(result);
+			
+			break;
+		case "save":
+			System.out.println("save");
+			break;
+		case "delete":
+			command = getDeleteCommand(result);
+			break;
+		case "deleteall":
+			command = this.commands.get("deleteall");
+			break;
+		case "show":
+			command = getShowCommand(result);
+			break;
+		case "showall":
+			command = this.commands.get("showall");
 			break;
 		default:
 			command = getCreationCmd(result);
@@ -205,9 +273,64 @@ public class DrawingTUI {
 		}
 		
 	}
+	private class FormeDeletion implements Command{
+		
+		private List<Forme> listOfFormes;
+		
+		public void setForme(List<Forme> formes) {
+			listOfFormes = formes;
+		}
+		
+		public void execute() {
+			for(Forme f : listOfFormes) {
+			for(Iterator<Forme> iterator = DrawingTUI.this.formes.iterator(); iterator.hasNext(); ) {
+			    if(iterator.next().getNom().equals(f.getNom()));
+			        iterator.remove();
+			}
+			}
+		}
+		
+		
+	}
+	private class FormeDeleteionAll implements Command{
+		
+		@Override
+		public void execute() {
+			DrawingTUI.this.formes.clear();
+		}
+	}
 	
+	private class ShowCommand implements Command{
+		private FormeGroupe g;
+		
+		public void setForme(FormeGroupe g) {
+			this.g = g;
+		}
+		@Override
+		public void execute() {
+			this.g.show();
+			
+		}
+		
+	}
+	private class ShowAllCommand implements Command{
+		@Override
+		public void execute() {
+			for (Forme f : DrawingTUI.this.formes) {
+				f.show();
+			}
+			
+		}
+		
+	}
 	public List<Forme> getFormes(){
 		return this.formes;
+	}
+
+
+	public List<Forme> getMovedFormes() {
+		// TODO Auto-generated method stub
+		return this.movedFormes;
 	}
 
 	
