@@ -26,7 +26,7 @@ public abstract class Dao<T> {
 
     try {
       Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-      connect = DriverManager.getConnection("jdbc:derby:6;create=true");
+      connect = DriverManager.getConnection("jdbc:derby:dessindb;create=true");
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
       try {

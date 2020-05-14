@@ -102,7 +102,14 @@ public void run(final String[] args) {
 				message = "You are quiting";
 				display.showMessage(message);
 				return;
-
+			case "savecommand":
+				message = "Your drawing has been saved !";
+				display.showMessage(message);
+				break;
+			case "loadcommand":
+				message = "Your drawing have been loaded";
+				display.showMessage(message);
+				break;
 			default:
 				message = drawing.getFormes().get(count).getType()+" "+drawing.getFormes().get(count).getNom()
 				+  " has been created.";

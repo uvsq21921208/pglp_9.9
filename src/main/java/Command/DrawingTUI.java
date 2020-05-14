@@ -1,5 +1,10 @@
 package Command;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import dao.Dao;
+import dao.DaoFactory;
 import dessin.Carre;
 import dessin.Cercle;
 import dessin.Forme;
@@ -21,15 +28,66 @@ import io.Display;
 public class DrawingTUI {
 	private static int groupeNumber = 0;
 	private List<Forme> formes;
-	private List<FormeGroupe> groupes;
 	private Map<String, Command> commands;
 	private List<Forme> movedFormes;
 	private List<Forme> deletedFormes;
+	private Connection connect = null;
+	private Statement statement;
+	
+	
 	public DrawingTUI() {
+		
+		 try {
+			  DaoFactory daoFac = new DaoFactory();
+			  dao.Dao<FormeGroupe> daoG = daoFac.createGroupeDao();
+			  daoG.connect();
+			  connect = daoG.connect; 
+		      DatabaseMetaData dbmd = connect.getMetaData();
+		      ResultSet rs = dbmd.getTables(null, "APP", "GROUPE", null);
+		      if(!rs.next())
+		      {
+		    	  String sql = "CREATE TABLE groupe(groupeid varchar(30) primary key not null)";
+			      
+			      statement = connect.createStatement();
+				    
+			      statement.execute(sql);
+			      
+			      sql = "CREATE TABLE Carre(nom varchar(20) PRIMARY KEY NOT NULL, " 
+					         + " cote int, x int, y int, "   
+					         + "groupeid varchar(30) references groupe(groupeid))";
+				  statement.execute(sql);
+				  
+				  sql = "CREATE TABLE Cercle(nom varchar(20) PRIMARY KEY NOT NULL, " 
+					         + " rayon int, x int, y int, "   
+					         + "groupeid varchar(30) references groupe(groupeid))";
+				  statement.execute(sql);
+				  
+				  sql = "CREATE TABLE Rectangle(nom varchar(20) PRIMARY KEY NOT NULL, " 
+					         + " h int, w int, x int, y int, "   
+					         + "groupeid varchar(30) references groupe(groupeid))";
+				  statement.execute(sql);
+				  
+				  sql = "CREATE TABLE Triangle(nom varchar(20) PRIMARY KEY NOT NULL, " 
+					         + " cote int, ax int, ay int, bx int, \"by\" int, cx int,  cy int,"   
+					         + "groupeid varchar(30) references groupe(groupeid))";
+				  statement.execute(sql);
+				  
+				  
+				  statement.close();
+				  
+				
+		      }
+		      
+		      
+		     connect.close();
+		    } catch (SQLException e) {
+
+		      e.printStackTrace();
+		}
 		commands = new HashMap<String, Command>();
 		formes = new ArrayList<Forme>();
 		movedFormes = new ArrayList<Forme>();
-		groupes = new ArrayList<FormeGroupe>();
+		//groupes = new ArrayList<FormeGroupe>();
 		commands.put("carre", new CarreCreation());
 		commands.put("cercle", new CercleCreation());
 		commands.put("triangle", new TriangleCreation());
@@ -41,7 +99,8 @@ public class DrawingTUI {
         commands.put("show", new ShowCommand());
         commands.put("delete", new FormeDeletion());
         commands.put("quit", new Quit());
-		
+		commands.put("save", new SaveCommand());
+		commands.put("load", new LoadCommand());
 	}
 	
 	
@@ -152,6 +211,60 @@ public class DrawingTUI {
 		
 		
 	}
+	private class SaveCommand implements Command{
+		private FormeGroupe groupe;
+		private DaoFactory dao;
+		private Dao<FormeGroupe> daoG;
+		
+		public void setGroupe(FormeGroupe groupe) {
+			this.groupe = groupe;
+		}
+		public SaveCommand() {
+			dao = new DaoFactory();
+			daoG = dao.createGroupeDao();
+		}
+		@Override
+		public void execute() {
+			daoG.delete(groupe);
+			daoG.create(groupe);
+			
+			
+		}
+		
+	}
+	private LoadCommand getLoadCommand(String[] result) {
+		LoadCommand command = (LoadCommand) this.commands.get("load");
+		try {
+			command.setGroupe(result[1]);
+		
+			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
+		return command;
+	}
+	private class LoadCommand implements Command{
+		private String groupe;
+		private DaoFactory dao;
+		private Dao<FormeGroupe> daoG;
+		private FormeGroupe formeGroupe;
+		
+		public void setGroupe(String groupe) {
+			this.groupe = groupe;
+		}
+		public LoadCommand() {
+			dao = new DaoFactory();
+			daoG = dao.createGroupeDao();
+		}
+		@Override
+		public void execute() {
+			formeGroupe = daoG.find(groupe);
+			Iterator<Forme> iterator = formeGroupe.iterator();
+			while (iterator.hasNext()) {
+				DrawingTUI.this.formes.add(iterator.next());
+			}
+		}
+	}
 
 	private Forme getFormeByName(final List<Forme> list, final String name){
 		try {
@@ -198,6 +311,22 @@ public class DrawingTUI {
 		command.setForme(listOfFormes);
 		return command;
 	}
+	
+	private Command getSaveCommand(String[] result) {
+		SaveCommand command = (SaveCommand) this.commands.get("save");
+		try {
+			FormeGroupe groupe = new FormeGroupe(result[1]);
+			for (Forme f: this.formes) {
+				f.setGroupeid(result[1]);
+				groupe.addForme(f);
+			}
+			command.setGroupe(groupe);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
+		return command;
+	}
+
 	public Command nextCommand(String userText) {
 		userText = userText.replaceAll("[=)(,]", " ");
 		String[] result = userText.split("\\s+");
@@ -214,7 +343,11 @@ public class DrawingTUI {
 			
 			break;
 		case "save":
-			System.out.println("save");
+			command = getSaveCommand(result);
+			break;
+		case "load":
+			this.formes.clear();
+			command = getLoadCommand(result);
 			break;
 		case "delete":
 			command = getDeleteCommand(result);
@@ -223,12 +356,13 @@ public class DrawingTUI {
 			command = this.commands.get("deleteall");
 			break;
 		case "show":
-			command = getShowCommand(result);
-			break;
-		case "showall":
 			if (result.length == 1) {
 				return null;
 			}
+			command = getShowCommand(result);
+			break;
+		case "showall":
+
 			command = this.commands.get("showall");
 			break;
 		case "quit":
@@ -243,6 +377,8 @@ public class DrawingTUI {
 		return command;
 	}
 	
+	
+
 	public void showDessin() {
 		
 	}

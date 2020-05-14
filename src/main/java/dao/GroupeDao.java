@@ -76,9 +76,8 @@ public class GroupeDao extends Dao<FormeGroupe> {
     PreparedStatement select = null;
     try {
       String sql = "select * from Groupe where groupeid = (?)";
-      int groupeid = Integer.parseInt(id);
       select = connect.prepareStatement(sql);
-      select.setInt(1, groupeid);
+      select.setString(1, id);
       select.execute();
      
       DaoFactory df = new DaoFactory();
@@ -134,7 +133,7 @@ public class GroupeDao extends Dao<FormeGroupe> {
     PreparedStatement updateGroupe = null;
     try {
       updateGroupe =
-          this.connect.prepareStatement("update Groupes set groupeid = (?)");
+          this.connect.prepareStatement("update Groupe set groupeid = (?)");
       updateGroupe.setString(1, obj.getNom());
       DaoFactory df = new DaoFactory();
       Dao<Carre> daoCar = df.createCarreDao();
@@ -208,7 +207,7 @@ public class GroupeDao extends Dao<FormeGroupe> {
     	  i.next();
         
       }
-      String sql = "Delete from Groupes where groupeid = (?)";
+      String sql = "Delete from Groupe where groupeid = (?)";
       String groupeid = obj.getNom();
       delete = connect.prepareStatement(sql);
       delete.setString(1, groupeid);
