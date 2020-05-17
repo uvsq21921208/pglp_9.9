@@ -40,7 +40,7 @@ For example
 ``show c1``
 - Type showall to show all formes
 ``showall``
-** Save/Load commands: **
+### Save/Load commands:
 - Type save name to save the dessin
 ``save example1``
    - will erase existing dessin if it already exists
