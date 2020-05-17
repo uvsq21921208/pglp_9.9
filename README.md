@@ -2,9 +2,9 @@
 # Drawing APP
 
 
-** How to use: **
+### How to use:
 
-** Creations commands: **
+#### Creations commands: 
 
 `` cer = cercle(1,(1,1)) or simply cer cercle 1 1 1``
 - This creates a cercle with rayon of 1 and 1,1 as center
@@ -27,7 +27,7 @@
    ``deleteall``
 
 
-** Movement commands: **
+#### Movement commands: 
 - Type move forme new coordinates to move one forme
 For example :
 ``move(c1,(1,2)) `` or simply ``move c1 1 2``
