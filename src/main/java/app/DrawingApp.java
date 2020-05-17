@@ -60,12 +60,12 @@ DrawingAPP;
         
             break;
           case "formegroupedeplacement":
-
+            StringBuffer buf = new StringBuffer();
             message = "The following forme has been moved : ";
             for (Forme f : drawing.getMovedFormes()) {
-              message += f.getNom() + " ";
+              buf.append(f.getNom() + " ");
             }
-               
+            message += buf.toString();
                
             display.showMessage(message);
                    
@@ -88,9 +88,11 @@ DrawingAPP;
             break;
           case "formedeletion":
             message = "The following formes have been deleted ";
+            buf = new StringBuffer();
             for (Forme f : drawing.getDeletedFormes()) {
-              message += f.getNom() + " ";
+              buf.append(f.getNom() + " ");
             }
+            message += buf.toString();
             display.showMessage(message);
             count = drawing.getFormes().size();
             drawing.deleteFormesDeleted();
@@ -107,6 +109,8 @@ DrawingAPP;
             message = "Your drawing have been loaded";
             display.showMessage(message);
             break;
+          case "helpcommand":
+            break;
           default:
             message = drawing.getFormes().get(count).getType()
               + " " + drawing.getFormes().get(count).getNom()
@@ -118,7 +122,7 @@ DrawingAPP;
             
         }
       } else {
-        message = "Please enter a valid command";
+        message = "Please enter a valid command or type help";
         display.showMessage(message);
       }
         

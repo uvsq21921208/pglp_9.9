@@ -94,13 +94,14 @@ public class DrawingTui {
     commands.put("rectangle", new RectangleCreation());
     commands.put("move", new FormeDeplacement());
     commands.put("moveall", new FormeGroupeDeplacement());
-    commands.put("showall", new ShowAllCommand());
-    commands.put("deleteall", new FormeDeleteionAll());
     commands.put("show", new ShowCommand());
+    commands.put("showall", new ShowAllCommand());
     commands.put("delete", new FormeDeletion());
-    commands.put("quit", new Quit());
+    commands.put("deleteall", new FormeDeleteionAll());
     commands.put("save", new SaveCommand());
     commands.put("load", new LoadCommand());
+    commands.put("quit", new Quit());
+    commands.put("help", new HelpCommand());
   }
  
  
@@ -204,7 +205,7 @@ public class DrawingTui {
     }
   }
 
-  private class SaveCommand implements Command {
+  private static class SaveCommand implements Command {
     private FormeGroupe groupe;
     private DaoFactory dao;
     private Dao<FormeGroupe> daoG;
@@ -305,8 +306,8 @@ public class DrawingTui {
     command.setForme(listOfFormes);
     return command;
   }
- 
-  private Command getSaveCommand(String[] result) {
+
+  private SaveCommand getSaveCommand(String[] result) {
     SaveCommand command = (SaveCommand) this.commands.get("save");
     try {
       FormeGroupe groupe = new FormeGroupe(result[1]);
@@ -337,7 +338,9 @@ public class DrawingTui {
         break;
       case "moveall":
         command = getGroupeMovementCmd(result);
-   
+        break;
+      case "help":
+        command = this.commands.get("help");
         break;
       case "save":
         command = getSaveCommand(result);
@@ -371,6 +374,7 @@ public class DrawingTui {
     return command;
   }
  
+
 
   private class CarreCreation extends CreationCommand implements Command {
  
@@ -442,7 +446,7 @@ public class DrawingTui {
   
   }
  
-  private class FormeDeplacement extends MovementCommand implements Command {
+  private static class FormeDeplacement extends MovementCommand implements Command {
  
     public void setParameters(int x, int y) {
       this.px = x;
@@ -456,7 +460,7 @@ public class DrawingTui {
   
   }
 
-  private class FormeGroupeDeplacement  extends MovementCommand implements Command {
+  private static class FormeGroupeDeplacement  extends MovementCommand implements Command {
 
  
     public void setParameters(int x, int y) {
@@ -499,8 +503,80 @@ public class DrawingTui {
       DrawingTui.this.formes.clear();
     }
   }
+  
+  private static class HelpCommand implements Command {
+
+    @Override
+    public void execute() {
+      String message = "Welcome to the help:";
+      Display display = new Display();
+      display.showMessage(message);
+      message = "** Creations commands: **";
+      display.showMessage(message);
+      message = "cer = cercle(1,(1,1)) or simply cer cercle 1 1 1";
+      display.showMessage(message);
+      message = "This creates a cercle with rayon of 1 and 1,1 as center";
+      display.showMessage(message);
+      message = "car  = carre(1,(1,1)) or simply car carre 1 1 1";
+      display.showMessage(message);
+      message = "This creates a carre with cote of 1 and on position 1,1";
+      display.showMessage(message);
+      message = "tri = triangle((1,1),(0,0),(4,4))  or simply tri 1 1 0 0 4 4";
+      display.showMessage(message);
+      message = "This creates a triangle with 3 points (1,1), (0,0), (4,4)";
+      display.showMessage(message);
+      message = "rec = rectangle((1,2),(5,5)) or simply rec rectangle 1 2 5 5";
+      display.showMessage(message);
+      message = "This creates a rectangle with h: 5, w : 5 on position 1,2";
+      display.showMessage(message);
  
-  private class ShowCommand implements Command {
+      message = "** Deletion commands: **";
+      display.showMessage(message);
+      message = "- Type delete <forme> to delete one forme";
+      display.showMessage(message);
+      message = "For example delete c1, this one deletes c1";
+      display.showMessage(message);
+      message = "- To delete everything, type deleteall";
+      display.showMessage(message);
+  
+      message = "** Movement commands: **";
+      display.showMessage(message);
+      message = "- Type move <forme> <new coordinates> to move one forme";
+      display.showMessage(message);
+      message = "For example move(c1,(1,2)) mvoes c1 to (1,2) or simple move c1 1 2";
+      display.showMessage(message);
+      message = "- To move many formes at one time, "
+        + "types moveall(f1,f2..., coordinates)"
+        + "or simply moveall f1 f2... cooridnates";
+      display.showMessage(message);
+      message = "For example moveall c1 c2 5,5";
+      display.showMessage(message);
+  
+      message = "** Show commands: **";
+      display.showMessage(message);
+      message = "- Type show <forme> <new coordinates> "
+        + "to sohw one forme";
+      display.showMessage(message);
+      message = "For example show c1";
+      display.showMessage(message);
+      message = "- Type showall to show all formes";
+      display.showMessage(message);
+  
+      message = "** Save/Load commands: **";
+      display.showMessage(message);
+      message = "Type save <name> to save the dessin";
+      display.showMessage(message);
+      message = "will erase existing dessin if it already exists";
+      display.showMessage(message);
+      message = "Type load <name> to load the dessin";
+      display.showMessage(message);
+  
+  
+    }
+   
+  }
+
+  private static class ShowCommand implements Command {
     private FormeGroupe groupe;
   
     public void setForme(FormeGroupe g) {

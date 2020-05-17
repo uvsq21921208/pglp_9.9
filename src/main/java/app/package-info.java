@@ -1,7 +1,6 @@
+
 /**
- * 
- */
-/**
+ * App package.
  * @author Mouttie
  *
  */
