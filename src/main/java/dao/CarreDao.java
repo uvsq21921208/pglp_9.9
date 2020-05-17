@@ -1,13 +1,12 @@
 package dao;
 
+import dessin.Carre;
+import dessin.Point;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dessin.Carre;
-import dessin.Cercle;
-import dessin.Point;
 
 public class CarreDao extends Dao<Carre> {
 
@@ -58,7 +57,7 @@ public class CarreDao extends Dao<Carre> {
       select.execute();
       ResultSet result = select.getResultSet();
       if (result.next()) {
-    	String nom = result.getString("nom");
+        String nom = result.getString("nom");
         int cote = result.getInt("cote");
         int x = result.getInt("x");
         int y = result.getInt("y");
@@ -76,7 +75,6 @@ public class CarreDao extends Dao<Carre> {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    //this.disconnect();
     return c;
 
   }
@@ -131,9 +129,9 @@ public class CarreDao extends Dao<Carre> {
 
   }
 
-@Override
-public ArrayList<Carre> getAllGroupeObject(String id) {
-	ArrayList<Carre> carres = new ArrayList<Carre>();
+  @Override
+  public ArrayList<Carre> getAllGroupeObject(String id) {
+    ArrayList<Carre> carres = new ArrayList<Carre>();
     this.connect();
     PreparedStatement select = null;
     try {
@@ -166,6 +164,6 @@ public ArrayList<Carre> getAllGroupeObject(String id) {
 
     //this.disconnect();
     return carres;
-}
+  }
   
 }

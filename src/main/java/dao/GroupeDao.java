@@ -1,17 +1,17 @@
 package dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import dessin.Carre;
 import dessin.Cercle;
 import dessin.Forme;
 import dessin.FormeGroupe;
 import dessin.Rectangle;
 import dessin.Triangle;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 public class GroupeDao extends Dao<FormeGroupe> {
 
@@ -35,19 +35,19 @@ public class GroupeDao extends Dao<FormeGroupe> {
       
       Iterator<Forme> iter = obj.iterator();
       while (iter.hasNext()) {
-    	  Forme f  = iter.next();
-          if ( f instanceof Carre) {
-        	  daoCar.create((Carre) f);
-          }
-          if ( f instanceof Cercle) {
-        	  daoCercle.create((Cercle) f);
-          }
-          if ( f instanceof Triangle) {
-        	  daoTriangle.create((Triangle) f);
-          }
-          if ( f instanceof Rectangle) {
-        	  daoRectangle.create((Rectangle) f);
-          }
+        Forme f  = iter.next();
+        if (f instanceof Carre) {
+          daoCar.create((Carre) f);
+        }
+        if (f instanceof Cercle) {
+          daoCercle.create((Cercle) f);
+        }
+        if (f instanceof Triangle) {
+          daoTriangle.create((Triangle) f);
+        }
+        if (f instanceof Rectangle) {
+          daoRectangle.create((Rectangle) f);
+        }
           
       }
 
@@ -61,7 +61,6 @@ public class GroupeDao extends Dao<FormeGroupe> {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    //this.disconnect();
     if (i > 0) {
       return obj;
     } else {
@@ -88,28 +87,28 @@ public class GroupeDao extends Dao<FormeGroupe> {
       
       ResultSet result = select.getResultSet();
       if (result.next()) {
-          obj = new FormeGroupe(result.getString(1));
-          ArrayList<Cercle> cercles = daoCercle.getAllGroupeObject(obj.getNom());
-          ArrayList<Triangle> triangles = daoTriangle.getAllGroupeObject(obj.getNom());
-          ArrayList<Carre> carres = daoCar.getAllGroupeObject(obj.getNom());
-          ArrayList<Rectangle> rectangles = daoRectangle.getAllGroupeObject(obj.getNom());
-          for (Carre c: carres) {
-            obj.addForme(c);
-          }
-          
-          for (Rectangle r: rectangles) {
-              obj.addForme(r);
-          }
-          
-          for (Cercle c: cercles) {
-              obj.addForme(c);
-          }
-          
-          for (Triangle t: triangles) {
-              obj.addForme(t);
-          }
-          
+        obj = new FormeGroupe(result.getString(1));
+        
+        ArrayList<Cercle> cercles = daoCercle.getAllGroupeObject(obj.getNom());
+        ArrayList<Carre> carres = daoCar.getAllGroupeObject(obj.getNom());
+        ArrayList<Rectangle> rectangles = daoRectangle.getAllGroupeObject(obj.getNom());
+        for (Carre c: carres) {
+          obj.addForme(c);
         }
+          
+        for (Rectangle r: rectangles) {
+          obj.addForme(r);
+        }
+          
+        for (Cercle c: cercles) {
+          obj.addForme(c);
+        }
+        ArrayList<Triangle> triangles = daoTriangle.getAllGroupeObject(obj.getNom());
+        for (Triangle t: triangles) {
+          obj.addForme(t);
+        }
+          
+      }
    
      
       
@@ -142,43 +141,41 @@ public class GroupeDao extends Dao<FormeGroupe> {
       Dao<Rectangle> daoRectangle = df.createRectangleDao();
       Iterator<Forme> formeIter = obj.iterator();
       while (formeIter.hasNext()) {
-    	  
-    	Forme f = formeIter.next();
-    	if (f instanceof Cercle) {
-    		
-        if (daoCercle.find(((Cercle) f).getNom()) != null) {
-        	daoCercle.update((Cercle) f);
-        } else {
-        	daoCercle.create((Cercle) f);
+       
+        Forme f = formeIter.next();
+        if (f instanceof Cercle) {
+      
+          if (daoCercle.find(((Cercle) f).getNom()) != null) {
+            daoCercle.update((Cercle) f);
+          } else {
+            daoCercle.create((Cercle) f);
+          }
         }
-      }
-    	
-    	if (f instanceof Rectangle) {
-    		
-            if (daoRectangle.find(((Rectangle) f).getNom()) != null) {
-            	daoRectangle.update((Rectangle) f);
-            } else {
-            	daoRectangle.create((Rectangle) f);
-            }
+     
+        if (f instanceof Rectangle) {
+          if (daoRectangle.find(((Rectangle) f).getNom()) != null) {
+            daoRectangle.update((Rectangle) f);
+          } else {
+            daoRectangle.create((Rectangle) f);
           }
-    	
-    	if (f instanceof Triangle) {
-    		
-            if (daoTriangle.find(((Triangle) f).getNom()) != null) {
-            	daoTriangle.update((Triangle) f);
-            } else {
-            	daoTriangle.create((Triangle) f);
-            }
+        }
+     
+        if (f instanceof Triangle) {
+     
+          if (daoTriangle.find(((Triangle) f).getNom()) != null) {
+            daoTriangle.update((Triangle) f);
+          } else {
+            daoTriangle.create((Triangle) f);
           }
-    	
-    	if (f instanceof Carre) {
-    		
-            if (daoCar.find(((Carre) f).getNom()) != null) {
-            	daoCar.update((Carre) f);
-            } else {
-            	daoCar.create((Carre) f);
-            }
+        }
+     
+        if (f instanceof Carre) {
+          if (daoCar.find(((Carre) f).getNom()) != null) {
+            daoCar.update((Carre) f);
+          } else {
+            daoCar.create((Carre) f);
           }
+        }
       }
 
     } catch (SQLException e) {
@@ -191,7 +188,6 @@ public class GroupeDao extends Dao<FormeGroupe> {
     } catch (Exception ex) {
       ex.printStackTrace();
     }
-    //this.disconnect();
     return obj;
   }
 
@@ -204,7 +200,7 @@ public class GroupeDao extends Dao<FormeGroupe> {
       
       Iterator<Forme> i = obj.iterator();
       while (i.hasNext()) {
-    	  i.next();
+        i.next();
         
       }
       String sql = "Delete from Groupe where groupeid = (?)";
@@ -229,10 +225,10 @@ public class GroupeDao extends Dao<FormeGroupe> {
 
   }
 
-@Override
-public ArrayList<FormeGroupe> getAllGroupeObject(String id) {
-	return null;
-	
-}
+  @Override
+  public ArrayList<FormeGroupe> getAllGroupeObject(String id) {
+    return null;
+ 
+  }
 
 }

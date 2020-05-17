@@ -5,4 +5,4 @@
  * @author Mouttie
  *
  */
-package Command;
+package command;

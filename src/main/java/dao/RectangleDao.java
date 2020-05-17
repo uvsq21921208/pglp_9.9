@@ -1,13 +1,12 @@
 package dao;
 
+import dessin.Point;
+import dessin.Rectangle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dessin.Rectangle;
-import dessin.Rectangle;
-import dessin.Point;
 
 public class RectangleDao extends Dao<Rectangle> {
 
@@ -59,7 +58,7 @@ public class RectangleDao extends Dao<Rectangle> {
       select.execute();
       ResultSet result = select.getResultSet();
       if (result.next()) {
-    	String nom = result.getString("nom");
+        String nom = result.getString("nom");
         int h = result.getInt("h");
         int w = result.getInt("w");
         int x = result.getInt("x");
@@ -134,9 +133,9 @@ public class RectangleDao extends Dao<Rectangle> {
 
   }
 
-@Override
-public ArrayList<Rectangle> getAllGroupeObject(String id) {
-	ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
+  @Override
+  public ArrayList<Rectangle> getAllGroupeObject(String id) {
+    ArrayList<Rectangle> rectangles = new ArrayList<Rectangle>();
     this.connect();
     PreparedStatement select = null;
     try {
@@ -147,7 +146,7 @@ public ArrayList<Rectangle> getAllGroupeObject(String id) {
       ResultSet result = select.getResultSet();
 
       while (result.next()) {
-    	String nom = result.getString("nom");
+        String nom = result.getString("nom");
         int h = result.getInt("h");
         int w = result.getInt("w");
         int x = result.getInt("x");
@@ -167,10 +166,7 @@ public ArrayList<Rectangle> getAllGroupeObject(String id) {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    
-
-    //this.disconnect();
     return rectangles;
-}
+  }
   
 }

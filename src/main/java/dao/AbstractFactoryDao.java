@@ -9,8 +9,12 @@ import dessin.Triangle;
 public interface AbstractFactoryDao {
 
   Dao<Carre> createCarreDao();
+
   Dao<Triangle> createTriangleDao();
+
   Dao<Rectangle> createRectangleDao();
+
   Dao<Cercle> createCercleDao();
+  
   Dao<FormeGroupe> createGroupeDao();
 }

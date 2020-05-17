@@ -1,12 +1,11 @@
 package dao;
 
+import dessin.Point;
+import dessin.Triangle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import dessin.Triangle;
-import dessin.Point;
 
 
 public class TriangleDao extends Dao<Triangle> {
@@ -61,7 +60,7 @@ public class TriangleDao extends Dao<Triangle> {
       select.execute();
       ResultSet result = select.getResultSet();
       if (result.next()) {
-    	String nom = result.getString("nom");
+        String nom = result.getString("nom");
         Point a = new Point(result.getInt("ax"), result.getInt("ay"));
         Point b = new Point(result.getInt("bx"), result.getInt("by"));
         Point c = new Point(result.getInt("cx"), result.getInt("cy"));
@@ -139,9 +138,9 @@ public class TriangleDao extends Dao<Triangle> {
 
   }
 
-@Override
-public ArrayList<Triangle> getAllGroupeObject(String id) {
-	ArrayList<Triangle> triangles = new ArrayList<Triangle>();
+  @Override
+  public ArrayList<Triangle> getAllGroupeObject(String id) {
+    ArrayList<Triangle> triangles = new ArrayList<Triangle>();
     this.connect();
     PreparedStatement select = null;
     try {
@@ -152,13 +151,11 @@ public ArrayList<Triangle> getAllGroupeObject(String id) {
       ResultSet result = select.getResultSet();
 
       while (result.next()) {
-    	  String nom = result.getString("nom");
-          Point a = new Point(result.getInt("ax"), result.getInt("ay"));
-          Point b = new Point(result.getInt("bx"), result.getInt("by"));
-          Point c = new Point(result.getInt("cx"), result.getInt("cy"));
-          
-          
-          Triangle t = new Triangle(nom, id, a, b, c);
+        String nom = result.getString("nom");
+        Point a = new Point(result.getInt("ax"), result.getInt("ay"));
+        Point b = new Point(result.getInt("bx"), result.getInt("by"));
+        Point c = new Point(result.getInt("cx"), result.getInt("cy"));
+        Triangle t = new Triangle(nom, id, a, b, c);
         triangles.add(t);
       }
     } catch (SQLException e) {
@@ -172,10 +169,7 @@ public ArrayList<Triangle> getAllGroupeObject(String id) {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    
-
-    //this.disconnect();
     return triangles;
-}
+  }
   
 }
